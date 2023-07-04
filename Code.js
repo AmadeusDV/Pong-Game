@@ -3,8 +3,10 @@
 var cnv = document.getElementById("cnv");
 var ctx = cnv.getContext("2d");
 ctx.fillStyle="#a0a0a0";
-ctx.fillRect(0, 0, 1300, 700);
-	
+var width = 1300;
+var height = 700;
+ctx.fillRect(0, 0, width, height);
+
 // Código dos Objetos
 
 var buttons = {
@@ -35,9 +37,8 @@ var ballin = {
 	Y: 350,
 	r: 5,
 	t: 0,
-	vx: 100,
-	vy: 100,
-	dt: 0.01,
+	vx: 5,
+	vy: 5,
 }
 
 // Código do desenho das barras
@@ -62,16 +63,10 @@ function drawBall(canvas, bola){
 // Código com a função de limpar a tela
 
 function cleanTela(){
-	ctx.clearRect(0, 0, 1300, 700);
+	ctx.clearRect(0, 0, width, height);
 	ctx.fillStyle="#a0a0a0";
-	ctx.fillRect(0, 0, 1300, 700);
+	ctx.fillRect(0, 0, width, height);
 }
-
-drawRectangle(ctx, player);
-
-drawRectangle(ctx, enemy);
-
-drawBall(ctx, ballin);
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -93,43 +88,60 @@ document.addEventListener(
 		else if(event.keyCode == buttons.baixo){
 			enemy.y = enemy.y + enemy.vy
 		}
-		
-// Atualizar Tela
-		
-		cleanTela();
-		drawRectangle(ctx, player);
-		drawRectangle(ctx, enemy);
-		drawBall(ctx, ballin);
 	}
 )
 
 // função que irá animar a bolinha, com o objetivo de ter uma direção aleatória ao iniciar o programa
 // Utilizarei o comando Math.random() ?
 
-function anima() {
-	var y = 410 + vy*t
-	var x = 920 + vx*t
-	var bol = document.getElementById("")
-	bol.style.top = y + "px";
-	bol.style.left = x + "px";
-	t = t + dt	
+function moveBolinha(bol) {
+	bol.X += bol.vx;
+	bol.Y += bol.vy;
 }
 
-// Código que dará o start pro jogo
+function moveBarra(barra) {
 
-function start() {
-	EhoMexeMexe = setInterval('anima()', 20)
 }
 
-// Código que fará o jogo parar
-
-function stop() {
-	clearInterval(EhoMexeMexe);
-	EhoMexeMexe = null;
-} 
-
-// Código que fará o jogo reiniciar (Talvez não seja necessário)
-
-function restart () {	
-	reload()
+function handleUserInput(){
+	
 }
+
+function detectColisionRectangleCircle(rect, circ){
+
+}
+
+function updatePhysics(){
+	moveBolinha(ballin);
+
+	moveBarra(player);
+	moveBarra(enemy);
+
+	//Detect colission
+	if((ballin.X - ballin.r) <= 0 || (ballin.X + ballin.r) >= width){
+		ballin.vx *= -1;
+	}
+	if((ballin.Y - ballin.r) <= 0 || (ballin.Y + ballin.r) >= height){
+		ballin.vy *= -1;
+	}
+
+	detectColisionRectangleCircle(player, ballin);
+	detectColisionRectangleCircle(enemy, ballin);
+
+}
+
+function plot(){
+	cleanTela();
+	drawRectangle(ctx, player);
+	drawRectangle(ctx, enemy);
+	drawBall(ctx, ballin);
+}
+
+function update(){
+	handleUserInput();
+	updatePhysics();
+	plot();
+}
+
+// Timer
+var timer = setInterval(update, 16.666);
