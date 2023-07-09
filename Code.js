@@ -1,4 +1,4 @@
-// Código que "criará" o espaço onde as coisas acontecerão 
+// Código que construirá o espaço do jogo
 
 var cnv = document.getElementById("cnv");
 var ctx = cnv.getContext("2d");
@@ -70,7 +70,7 @@ function cleanTela(){
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// Código que fará ser possível mover as barras com botões do teclado.
+// Código que moverá as barras com botões do teclado.
 
 document.addEventListener(
 	"keydown", 
@@ -91,8 +91,7 @@ document.addEventListener(
 	}
 )
 
-// função que irá animar a bolinha, com o objetivo de ter uma direção aleatória ao iniciar o programa
-// Utilizarei o comando Math.random() ?
+// função que irá animar a bolinha
 
 function moveBolinha(bol) {
 	bol.X += bol.vx;
@@ -113,17 +112,34 @@ function detectColisionRectangleCircle(rect, circ){
 
 function updatePhysics(){
 	moveBolinha(ballin);
-
 	moveBarra(player);
 	moveBarra(enemy);
 
-	//Detect colission
-	if((ballin.X - ballin.r) <= 0 || (ballin.X + ballin.r) >= width){
+	//Detect colision bolinha e paredes
+	if(ballin.X - ballin.r <= 0 || ballin.X + ballin.r >= width){
 		ballin.vx *= -1;
 	}
-	if((ballin.Y - ballin.r) <= 0 || (ballin.Y + ballin.r) >= height){
+	if(ballin.Y - ballin.r <= 0 || ballin.Y + ballin.r >= height){
 		ballin.vy *= -1;
 	}
+
+	//Detect colision barras e paredes
+
+	if(player.y + player.h >= height){
+		player.y += (player.vy)*-1;
+	}
+	if(player.y <= 0){
+		player.y -= (player.vy)*-1;
+	}
+
+	if(enemy.y + enemy.h >= height){
+		enemy.y += (enemy.vy)*-1;
+	}
+	if(enemy.y <= 0){
+		enemy.y -= (enemy.vy)*-1;
+	}
+
+	//Detect colision bolinha e barras
 
 	detectColisionRectangleCircle(player, ballin);
 	detectColisionRectangleCircle(enemy, ballin);
