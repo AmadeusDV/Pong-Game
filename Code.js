@@ -1,3 +1,5 @@
+// Jogo Pong não está completo, porém a essência do jogo já está presente.
+
 // Código que construirá o espaço do jogo
 
 var cnv = document.getElementById("cnv");
@@ -6,6 +8,10 @@ ctx.fillStyle="#a0a0a0";
 var width = 1300;
 var height = 700;
 ctx.fillRect(0, 0, width, height);
+var vPaineltxtPontos1;
+var vPaineltxtPontos2;
+var pontos = 0;
+game = false;
 
 // Código dos Objetos
 
@@ -32,7 +38,7 @@ var enemy = {
 	vy: 10
 }
 
-var ballin = {
+var ball = {
 	X: 652.5,
 	Y: 350,
 	r: 5,
@@ -59,6 +65,16 @@ function drawBall(canvas, bola){
 	canvas.fillStyle = "black"; //ctx.fillstyle cor de preenchimento
 	canvas.fill(); // ctx.fill desenho com preenchimento
 }
+
+// Código com a função de começar o programa, após apertar o botão Start.
+
+//function stargame(){
+	vplayer = document.getElementById("dvplayer");
+	venemy = document.getElementById("dvenemy");
+	vball = document.getElementById("dvball");
+	vPaineltxtPontos1 = document.getElementById("txtPontos1");
+	vPaineltxtPontos2 = document.getElementById("txtPontos2");
+//}
 
 // Código com a função de limpar a tela
 
@@ -111,16 +127,16 @@ function detectColisionRectangleCircle(rect, circ){
 }
 
 function updatePhysics(){
-	moveBolinha(ballin);
+	moveBolinha(ball);
 	moveBarra(player);
 	moveBarra(enemy);
 
 	//Detect colision bolinha e paredes
-	if(ballin.X - ballin.r <= 0 || ballin.X + ballin.r >= width){
-		ballin.vx *= -1;
+	if(ball.X - ball.r <= 0 || ball.X + ball.r >= width){
+		ball.vx *= -1;
 	}
-	if(ballin.Y - ballin.r <= 0 || ballin.Y + ballin.r >= height){
-		ballin.vy *= -1;
+	if(ball.Y - ball.r <= 0 || ball.Y + ball.r >= height){
+		ball.vy *= -1;
 	}
 
 	//Detect colision barras e paredes
@@ -141,16 +157,35 @@ function updatePhysics(){
 
 	//Detect colision bolinha e barras
 
-	detectColisionRectangleCircle(player, ballin);
-	detectColisionRectangleCircle(enemy, ballin);
+	if(ball.X <= player.x + player.w && ball.Y + ball.r >= player.y && ball.Y <= player.y + player.h) {
+		ball.vy = (ball.Y - player.y + (player.h/2))/16;
+		ball.vx *= -1;
+	}
+	if(ball.X >= enemy.x + enemy.w && ball.Y + ball.r >= enemy.y && ball.Y <= enemy.y + enemy.h) {
+		ball.vy = (ball.Y - enemy.y + (enemy.h/2))/16;
+		ball.vx *= -1;
+	}
 
+	//Detect marcar pontuação
+
+	if(ball.X >= width - 5){
+		pontos++;
+		vPaineltxtPontos1.value = pontos;
+	}
+	if(ball.X <= 5){
+		pontos++;
+		vPaineltxtPontos2.value = pontos;
+	}
+
+	detectColisionRectangleCircle(player, ball);
+	detectColisionRectangleCircle(enemy, ball);
 }
 
 function plot(){
 	cleanTela();
 	drawRectangle(ctx, player);
 	drawRectangle(ctx, enemy);
-	drawBall(ctx, ballin);
+	drawBall(ctx, ball);
 }
 
 function update(){
@@ -160,4 +195,4 @@ function update(){
 }
 
 // Timer
-var timer = setInterval(update, 16.666);
+var timer = setInterval(update, (1/60)*1000);
