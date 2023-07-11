@@ -1,5 +1,4 @@
 // Jogo Pong não está completo, porém a essência do jogo já está presente.
-
 // Código que construirá o espaço do jogo
 
 var cnv = document.getElementById("cnv");
@@ -11,7 +10,7 @@ ctx.fillRect(0, 0, width, height);
 var vPaineltxtPontos1;
 var vPaineltxtPontos2;
 var pontos = 0;
-game = false;
+var timer = setInterval(update, (1/60)*1000);
 
 // Código dos Objetos
 
@@ -68,13 +67,13 @@ function drawBall(canvas, bola){
 
 // Código com a função de começar o programa, após apertar o botão Start.
 
-//function stargame(){
+/*function start(){
 	vplayer = document.getElementById("dvplayer");
 	venemy = document.getElementById("dvenemy");
 	vball = document.getElementById("dvball");
+}*/
 	vPaineltxtPontos1 = document.getElementById("txtPontos1");
 	vPaineltxtPontos2 = document.getElementById("txtPontos2");
-//}
 
 // Código com a função de limpar a tela
 
@@ -84,28 +83,7 @@ function cleanTela(){
 	ctx.fillRect(0, 0, width, height);
 }
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-// Código que moverá as barras com botões do teclado.
-
-document.addEventListener(
-	"keydown", 
-	function (event) {
-		// Atualizar objetos
-		if(event.keyCode == buttons.w){
-			player.y = player.y - player.vy;
-		}
-		else if(event.keyCode == buttons.s){
-			player.y = player.y + player.vy
-		}
-		else if(event.keyCode == buttons.cima){
-			enemy.y = enemy.y - enemy.vy
-		}
-		else if(event.keyCode == buttons.baixo){
-			enemy.y = enemy.y + enemy.vy
-		}
-	}
-)
+//-----------------------------------------------------------------------------------------------------------------------
 
 // função que irá animar a bolinha
 
@@ -194,5 +172,23 @@ function update(){
 	plot();
 }
 
-// Timer
-var timer = setInterval(update, (1/60)*1000);
+// Código que moverá as barras com botões do teclado.
+
+document.addEventListener(
+	"keydown", 
+	function (event) {
+		// Atualizar objetos
+		if(event.keyCode == buttons.w){
+			player.y = player.y - player.vy;
+		}
+		else if(event.keyCode == buttons.s){
+			player.y = player.y + player.vy
+		}
+		else if(event.keyCode == buttons.cima){
+			enemy.y = enemy.y - enemy.vy
+		}
+		else if(event.keyCode == buttons.baixo){
+			enemy.y = enemy.y + enemy.vy
+		}
+	}
+)
